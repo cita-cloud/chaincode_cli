@@ -1,0 +1,16 @@
+[package]
+name = "chaincode_cli"
+version = "0.1.0"
+authors = ["whfuyn <whfuyn@outlook.com>"]
+edition = "2018"
+
+[dependencies]
+tokio = "0.2"
+tonic = "0.2"
+prost = "0.6"
+prost-types = "0.6"
+shrust = "0.0.7"
+cita_cloud_proto = { git = "https://github.com/cita-cloud/cita_cloud_proto" }
+
+[build-dependencies]
+tonic-build = { version = "0.3" }
