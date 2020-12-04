@@ -26,10 +26,11 @@ use cli::Cli;
 use shrust::{Shell, ShellIO};
 use std::io::prelude::*;
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let kms_addr = "localhost:50005";
     let controller_addr = "localhost:50004";
-    let mut shell = Shell::new(Cli::new(kms_addr, controller_addr));
+    let mut shell = Shell::new(Cli::new(kms_addr, controller_addr).await);
     shell.new_command_noargs("hello", "Say 'hello' to the world", |io, _| {
         writeln!(io, "Hello World !!!")?;
         Ok(())
