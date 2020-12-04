@@ -1,4 +1,5 @@
 use cita_cloud_proto::blockchain::{Transaction, UnverifiedTransaction, Witness};
+use cita_cloud_proto::common::Empty;
 use cita_cloud_proto::controller::{
     raw_transaction::Tx, rpc_service_client::RpcServiceClient, BlockNumber, Flag, RawTransaction,
 };
@@ -6,10 +7,9 @@ use cita_cloud_proto::kms::{
     kms_service_client::KmsServiceClient, GenerateKeyPairRequest, HashDataRequest,
     SignMessageRequest,
 };
-use tonic::transport::channel::Channel;
 use prost::Message;
+use tonic::transport::channel::Channel;
 use tonic::Request;
-use cita_cloud_proto::common::Empty;
 
 pub struct Proposer {
     chain_id: Vec<u8>,
@@ -22,7 +22,6 @@ pub struct Proposer {
 }
 
 impl Proposer {
-
     pub async fn new(kms_addr: &str, controller_addr: &str) -> Self {
         let mut kms_client = {
             let kms_addr = format!("http://{}", kms_addr);
@@ -80,11 +79,7 @@ impl Proposer {
     }
 
     pub async fn propose(&mut self, proposal: Vec<u8>) {
-        let tx = build_tx(
-            proposal,
-            self.start_block_number,
-            self.chain_id.clone(),
-        ); 
+        let tx = build_tx(proposal, self.start_block_number, self.chain_id.clone());
 
         // calc tx hash
         let tx_hash = {
@@ -136,7 +131,8 @@ impl Proposer {
                 tx: Some(Tx::NormalTx(unverified_tx)),
             }
         };
-        let ret_hash = self.rpc_client
+        let ret_hash = self
+            .rpc_client
             .send_raw_transaction(raw_tx)
             .await
             .unwrap()
@@ -144,7 +140,6 @@ impl Proposer {
             .hash;
         assert_eq!(ret_hash, tx_hash);
     }
-
 }
 
 fn build_tx(data: Vec<u8>, start_block_number: u64, chain_id: Vec<u8>) -> Transaction {

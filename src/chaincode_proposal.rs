@@ -1,10 +1,10 @@
-use std::collections::HashMap;
-use prost::Message;
 use crate::common;
 use crate::msp;
 use crate::protos;
 use crate::protos::chaincode_message::Type as ChaincodeMsgType;
 use crate::protos::ChaincodeMessage;
+use prost::Message;
+use std::collections::HashMap;
 
 pub trait MessageDump {
     fn dump(&self) -> Vec<u8>;
@@ -66,8 +66,7 @@ impl ChaincodeProposal {
             .dump()
         };
         let input = {
-            let args: Vec<Vec<u8>> =
-                [&[self.method.as_bytes().to_vec()], &self.args[..]].concat();
+            let args: Vec<Vec<u8>> = [&[self.method.as_bytes().to_vec()], &self.args[..]].concat();
             protos::ChaincodeInput {
                 args,
                 decorations: HashMap::new(),
@@ -149,4 +148,3 @@ impl ChaincodeProposalBuilder {
         }
     }
 }
-

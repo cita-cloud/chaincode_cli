@@ -18,13 +18,13 @@ mod queryresult {
     tonic::include_proto!("queryresult");
 }
 
-mod chaincode_tx;
-mod proposer;
+mod chaincode_proposal;
 mod cli;
+mod proposer;
 
+use cli::Cli;
 use shrust::{Shell, ShellIO};
 use std::io::prelude::*;
-use cli::Cli;
 
 fn main() {
     let kms_addr = "localhost:50005";
