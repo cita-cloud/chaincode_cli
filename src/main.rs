@@ -28,71 +28,71 @@ use cli::Cli;
 async fn main() {
     let kms_addr = "localhost:50005";
     let controller_addr = "localhost:50004";
-    let mut cli = Cli::new(kms_addr, controller_addr).await;
-    cli.call(
+    let (mut org1, mut org2) = Cli::default_orgs(kms_addr, controller_addr).await;
+    org1.call(
         "CreateAsset",
         &["asset1", "A new asset for Org1MSP"],
         &[("asset_properties", "asset1's property")],
     )
     .await;
-    cli.call("GetAssetPrivateProperties", &["asset1"], &[])
+    org1.call("GetAssetPrivateProperties", &["asset1"], &[])
         .await;
-    cli.call("ReadAsset", &["asset1"], &[]).await;
-    cli.call(
+    org1.call("ReadAsset", &["asset1"], &[]).await;
+    org1.call(
         "ChangePublicDescription",
         &["asset1", "This asset is for sale"],
         &[],
     )
     .await;
-    cli.call("ReadAsset", &["asset1"], &[]).await;
-    cli.call(
+    org1.call("ReadAsset", &["asset1"], &[]).await;
+    org2.call(
         "ChangePublicDescription",
         &["asset1", "The worst asset"],
         &[],
     )
     .await;
-    cli.call("ReadAsset", &["asset1"], &[]).await;
-    cli.call(
+    org1.call("ReadAsset", &["asset1"], &[]).await;
+    org1.call(
         "AgreeToSell",
         &["asset1"],
         &[("asset_price", "{\"asset_id\":\"asset1\",\"trade_id\":\"109f4b3c50d7b0df729d299bc6f8e9ef9066971f\",\"price\":110}")]
     ).await;
-    cli.call("GetAssetSalesPrice", &["asset1"], &[]).await;
-    cli.call(
+    org1.call("GetAssetSalesPrice", &["asset1"], &[]).await;
+    org2.call(
         "VerifyAssetProperties",
         &["asset1"],
         &[("asset_properties", "asset1's property")],
     )
     .await;
-    cli.call(
+    org2.call(
         "AgreeToBuy",
         &["asset1"],
         &[("asset_price", "{\"asset_id\":\"asset1\",\"trade_id\":\"109f4b3c50d7b0df729d299bc6f8e9ef9066971f\",\"price\":100}")]
     ).await;
-    cli.call("GetAssetBidPrice", &["asset1"], &[]).await;
-    cli.call(
+    org2.call("GetAssetBidPrice", &["asset1"], &[]).await;
+    org1.call(
         "TransferAsset",
         &["asset1","Org2MSP"],
         &[("asset_properties", "asset1's property"), ("asset_price", "{\"asset_id\":\"asset1\",\"trade_id\":\"109f4b3c50d7b0df729d299bc6f8e9ef9066971f\",\"price\":100}")]
     ).await;
-    cli.call(
+    org1.call(
         "AgreeToSell",
         &["asset1"],
         &[("asset_price", "{\"asset_id\":\"asset1\",\"trade_id\":\"109f4b3c50d7b0df729d299bc6f8e9ef9066971f\",\"price\":100}")]
     ).await;
-    cli.call(
+    org1.call(
         "TransferAsset",
         &["asset1","Org2MSP"],
         &[("asset_properties", "asset1's property"), ("asset_price", "{\"asset_id\":\"asset1\",\"trade_id\":\"109f4b3c50d7b0df729d299bc6f8e9ef9066971f\",\"price\":100}")]
     ).await;
-    cli.call("ReadAsset", &["asset1"], &[]).await;
-    cli.call("GetAssetPrivateProperties", &["asset1"], &[])
+    org2.call("ReadAsset", &["asset1"], &[]).await;
+    org2.call("GetAssetPrivateProperties", &["asset1"], &[])
         .await;
-    cli.call(
+    org2.call(
         "ChangePublicDescription",
         &["asset1", "This asset is not for sale"],
         &[],
     )
     .await;
-    cli.call("ReadAsset", &["asset1"], &[]).await;
+    org2.call("ReadAsset", &["asset1"], &[]).await;
 }

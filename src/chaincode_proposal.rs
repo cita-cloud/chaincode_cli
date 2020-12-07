@@ -93,7 +93,7 @@ impl ChaincodeProposal {
             r#type: ChaincodeMsgType::Transaction as i32,
             payload: input,
             txid: self.tx_id.clone(),
-            channel_id: self.tx_id.clone(),
+            channel_id: self.channel_id.clone(),
             proposal: Some(signed_proposal),
             ..Default::default()
         }
