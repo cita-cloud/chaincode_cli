@@ -1,7 +1,7 @@
 use cita_cloud_proto::blockchain::{Transaction, UnverifiedTransaction, Witness};
 use cita_cloud_proto::common::Empty;
 use cita_cloud_proto::controller::{
-    raw_transaction::Tx, rpc_service_client::RpcServiceClient, BlockNumber, Flag, RawTransaction,
+    raw_transaction::Tx, rpc_service_client::RpcServiceClient, Flag, RawTransaction,
 };
 use cita_cloud_proto::kms::{
     kms_service_client::KmsServiceClient, GenerateKeyPairRequest, HashDataRequest,

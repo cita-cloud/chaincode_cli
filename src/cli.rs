@@ -1,22 +1,19 @@
-use cita_cloud_proto::common::Hash;
-
-use crate::chaincode_proposal::ChaincodeProposal;
 use crate::chaincode_proposal::ChaincodeProposalBuilder;
 use crate::proposer::Proposer;
 use std::collections::HashMap;
 
 pub struct Cli {
-    builder_map: HashMap<String /*mspid*/, ChaincodeProposalBuilder>,
     proposer: Proposer,
     current_org: Option<String>,
+    builder_map: HashMap<String /*mspid*/, ChaincodeProposalBuilder>,
 }
 
 impl Cli {
     pub async fn new(kms_addr: &str, controller_addr: &str) -> Self {
         let mut cli = Self {
-            builder_map: HashMap::new(),
             proposer: Proposer::new(kms_addr, controller_addr).await,
             current_org: None,
+            builder_map: HashMap::new(),
         };
         cli.init();
         cli
@@ -42,9 +39,10 @@ S4u7BSot5a2st7igwkukLRk2e5TwFhECcZDA
 -----END CERTIFICATE-----";
         self.create_org(
             channel_id.clone(),
-            org1_mspid,
+            org1_mspid.clone(),
             org1_cert.as_bytes().to_vec(),
         );
+        self.switch_org(org1_mspid);
 
         let org2_mspid = "Org2MSP".to_string();
         let org2_cert = "-----BEGIN CERTIFICATE-----
@@ -76,5 +74,10 @@ Jfn1p8cfo4BPd3tSllZEIbXE2uCMkKE4LGmo
     pub fn create_org(&mut self, channel_id: String, mspid: String, id_bytes: Vec<u8>) {
         let builder = ChaincodeProposalBuilder::new(channel_id, mspid.clone(), id_bytes);
         self.builder_map.insert(mspid, builder);
+    }
+
+    pub fn switch_org(&mut self, mspid: String) {
+        // TODO: handle mspid no exist
+        self.current_org.replace(mspid);
     }
 }
