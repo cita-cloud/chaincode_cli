@@ -1,7 +1,7 @@
 fn main() {
     tonic_build::configure()
         .build_client(false)
-        .build_server(true)
+        .build_server(false)
         .format(true)
         .compile(
             &[
