@@ -1,18 +1,32 @@
-# chaincode_cli
+# chaincode_invoker
 
-A tool for building `executor_chaincode`'s transactions.
+A tool for building and sending `executor_chaincode`'s transactions.
 
 ## Usage
 
+### 1. Examples
+
 ```rust
+cargo run --example asset-transfer-basic
+```
+```rust
+cargo run --example asset-transfer-secured-agreement
+```
+
+### 2. Use as a library
+
+```rust
+use chaincode_invoker::Invoker;
+
 let kms_addr = "localhost:50005";
 let controller_addr = "localhost:50004";
 
 let channel_id = "cita-cloud";
 let org1_mspid = "Org1MSP";
+
 let org1_cert = /* cert file ommitted */;
 
-let org1 = Cli::new(
+let org1 = Invoker::new(
     kms_addr,
     controller_addr,
     channel_id,
@@ -21,9 +35,12 @@ let org1 = Cli::new(
 ).await;
 
 org1.call(
-    "CreateAsset", // method name
-    &["asset1", "A new asset for Org1MSP"], // args
-    &[("asset_properties", "asset1's property")], // transient_map(a key-value map representing the private data)
+    // method name
+    "CreateAsset",
+    // args
+    &["asset1", "A new asset for Org1MSP"],
+    // transient_map(a key-value map representing the private data)
+    &[("asset_properties", "asset1's property")],
 ).await;
 ```
 

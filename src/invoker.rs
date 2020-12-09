@@ -1,12 +1,12 @@
-use crate::chaincode_proposal::ChaincodeProposalBuilder;
-use crate::proposer::Proposer;
+use crate::proposal::ChaincodeProposalBuilder;
+use crate::sender::Sender;
 
-pub struct Cli {
-    proposer: Proposer,
+pub struct Invoker {
+    sender: Sender,
     builder: ChaincodeProposalBuilder,
 }
 
-impl Cli {
+impl Invoker {
     pub async fn new(
         kms_addr: &str,
         controller_addr: &str,
@@ -15,7 +15,7 @@ impl Cli {
         id_bytes: Vec<u8>,
     ) -> Self {
         Self {
-            proposer: Proposer::new(kms_addr, controller_addr).await,
+            sender: Sender::new(kms_addr, controller_addr).await,
             builder: ChaincodeProposalBuilder::new(
                 channel_id.to_string(),
                 mspid.to_string(),
@@ -81,6 +81,6 @@ Jfn1p8cfo4BPd3tSllZEIbXE2uCMkKE4LGmo
 
     pub async fn call(&mut self, method: &str, args: &[&str], transient_map: &[(&str, &str)]) {
         let proposal = self.builder.build(method, args, transient_map);
-        self.proposer.propose(proposal.dump()).await;
+        self.sender.send(proposal.dump()).await;
     }
 }
