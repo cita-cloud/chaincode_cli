@@ -11,7 +11,7 @@ use prost::Message;
 use tonic::transport::channel::Channel;
 use tonic::Request;
 
-pub struct Proposer {
+pub struct Sender {
     chain_id: Vec<u8>,
     start_block_number: u64,
     key_id: u64,
@@ -21,7 +21,7 @@ pub struct Proposer {
     rpc_client: RpcServiceClient<Channel>,
 }
 
-impl Proposer {
+impl Sender {
     pub async fn new(kms_addr: &str, controller_addr: &str) -> Self {
         let mut kms_client = {
             let kms_addr = format!("http://{}", kms_addr);
@@ -78,7 +78,7 @@ impl Proposer {
         }
     }
 
-    pub async fn propose(&mut self, proposal: Vec<u8>) {
+    pub async fn send(&mut self, proposal: Vec<u8>) {
         let tx = build_tx(proposal, self.start_block_number, self.chain_id.clone());
 
         // calc tx hash

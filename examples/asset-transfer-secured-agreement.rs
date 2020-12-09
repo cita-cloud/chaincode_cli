@@ -1,34 +1,10 @@
-mod common {
-    tonic::include_proto!("common");
-}
-
-mod msp {
-    tonic::include_proto!("msp");
-}
-
-mod protos {
-    tonic::include_proto!("protos");
-}
-
-mod kvrwset {
-    tonic::include_proto!("kvrwset");
-}
-
-mod queryresult {
-    tonic::include_proto!("queryresult");
-}
-
-mod chaincode_proposal;
-mod cli;
-mod proposer;
-
-use cli::Cli;
+use chaincode_invoker::Invoker;
 
 #[tokio::main]
 async fn main() {
     let kms_addr = "localhost:50005";
     let controller_addr = "localhost:50004";
-    let (mut org1, mut org2) = Cli::default_orgs(kms_addr, controller_addr).await;
+    let (mut org1, mut org2) = Invoker::default_orgs(kms_addr, controller_addr).await;
     org1.call(
         "CreateAsset",
         &["asset1", "A new asset for Org1MSP"],

@@ -1,5 +1,5 @@
 [package]
-name = "chaincode_cli"
+name = "chaincode_invoker"
 version = "0.1.0"
 authors = ["whfuyn <whfuyn@outlook.com>"]
 edition = "2018"

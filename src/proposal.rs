@@ -6,7 +6,7 @@ use crate::protos::ChaincodeMessage;
 use prost::Message;
 use std::collections::HashMap;
 
-pub trait MessageDump {
+trait MessageDump {
     fn dump(&self) -> Vec<u8>;
 }
 
@@ -18,7 +18,7 @@ impl<T: Message> MessageDump for T {
     }
 }
 
-pub fn get_timestamp() -> Option<prost_types::Timestamp> {
+fn get_timestamp() -> Option<prost_types::Timestamp> {
     use std::convert::TryFrom;
     use std::time::SystemTime;
     let now = SystemTime::now();
@@ -75,7 +75,9 @@ impl ChaincodeProposal {
             .dump()
         };
         let payload = protos::ChaincodeProposalPayload {
+            // method and args
             input: input.clone(),
+            // private data key-value map
             transient_map: self.transient_map.clone(),
         }
         .dump();
@@ -87,13 +89,17 @@ impl ChaincodeProposal {
         .dump();
         let signed_proposal = protos::SignedProposal {
             proposal_bytes: proposal,
+            // The signature over the proposal_bytes signed by the client.
+            // We don't use it.
             signature: vec![],
         };
         ChaincodeMessage {
             r#type: ChaincodeMsgType::Transaction as i32,
+            // This payload contains the function name to be called and its args
             payload: input,
             txid: self.tx_id.clone(),
             channel_id: self.channel_id.clone(),
+            // signed_proposal is used to provide caller's identity and this call's private data.
             proposal: Some(signed_proposal),
             ..Default::default()
         }

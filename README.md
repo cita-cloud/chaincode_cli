@@ -1,10 +1,12 @@
-# chaincode_cli
+# chaincode_invoker
 
-A tool for building `executor_chaincode`'s transactions.
+A tool for building and sending `executor_chaincode`'s transactions.
 
 ## Usage
 
 ```rust
+use chaincode_invoker::Invoker;
+
 let kms_addr = "localhost:50005";
 let controller_addr = "localhost:50004";
 
@@ -12,7 +14,7 @@ let channel_id = "cita-cloud";
 let org1_mspid = "Org1MSP";
 let org1_cert = /* cert file ommitted */;
 
-let org1 = Cli::new(
+let org1 = Invoker::new(
     kms_addr,
     controller_addr,
     channel_id,
