@@ -4,7 +4,12 @@ use chaincode_invoker::Invoker;
 async fn main() {
     let kms_addr = "localhost:50005";
     let controller_addr = "localhost:50004";
-    let (mut org1, mut org2) = Invoker::default_orgs("asset-transfer-secured-agreement", kms_addr, controller_addr).await;
+    let (mut org1, mut org2) = Invoker::default_orgs(
+        "asset-transfer-secured-agreement",
+        kms_addr,
+        controller_addr,
+    )
+    .await;
     org1.call(
         "CreateAsset",
         &["asset1", "A new asset for Org1MSP"],

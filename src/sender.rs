@@ -86,6 +86,7 @@ impl Sender {
     pub async fn send(&mut self, proposal: &[u8]) {
         let mut data = BytesMut::new();
         data.put_u64(self.cc_name.len() as u64);
+        data.put_slice(self.cc_name.as_bytes());
         data.put_slice(proposal);
 
         let tx = build_tx(
