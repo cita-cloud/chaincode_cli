@@ -8,6 +8,7 @@ pub struct Invoker {
 
 impl Invoker {
     pub async fn new(
+        cc_name: &str,
         kms_addr: &str,
         controller_addr: &str,
         channel_id: &str,
@@ -15,7 +16,7 @@ impl Invoker {
         id_bytes: Vec<u8>,
     ) -> Self {
         Self {
-            sender: Sender::new(kms_addr, controller_addr).await,
+            sender: Sender::new(cc_name, kms_addr, controller_addr).await,
             builder: ChaincodeProposalBuilder::new(
                 channel_id.to_string(),
                 mspid.to_string(),
@@ -24,7 +25,11 @@ impl Invoker {
         }
     }
 
-    pub async fn default_orgs(kms_addr: &str, controller_addr: &str) -> (Self, Self) {
+    pub async fn default_orgs(
+        cc_name: &str,
+        kms_addr: &str,
+        controller_addr: &str,
+    ) -> (Self, Self) {
         let channel_id = "cita-cloud";
         // certs are from fabric-samples
         let org1_mspid = "Org1MSP";
@@ -60,6 +65,7 @@ Jfn1p8cfo4BPd3tSllZEIbXE2uCMkKE4LGmo
 -----END CERTIFICATE-----";
 
         let org1 = Self::new(
+            cc_name,
             kms_addr,
             controller_addr,
             channel_id,
@@ -69,6 +75,7 @@ Jfn1p8cfo4BPd3tSllZEIbXE2uCMkKE4LGmo
         .await;
 
         let org2 = Self::new(
+            cc_name,
             kms_addr,
             controller_addr,
             channel_id,
@@ -81,6 +88,6 @@ Jfn1p8cfo4BPd3tSllZEIbXE2uCMkKE4LGmo
 
     pub async fn call(&mut self, method: &str, args: &[&str], transient_map: &[(&str, &str)]) {
         let proposal = self.builder.build(method, args, transient_map);
-        self.sender.send(proposal.dump()).await;
+        self.sender.send(&proposal.dump()).await;
     }
 }

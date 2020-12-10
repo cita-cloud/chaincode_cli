@@ -4,7 +4,8 @@ use chaincode_invoker::Invoker;
 async fn main() {
     let kms_addr = "localhost:50005";
     let controller_addr = "localhost:50004";
-    let (mut org, _) = Invoker::default_orgs(kms_addr, controller_addr).await;
+    let (mut org, _) =
+        Invoker::default_orgs("asset-transfer-basic", kms_addr, controller_addr).await;
     org.call("InitLedger", &["asset8", "blue", "16", "Kelly", "750"], &[])
         .await;
     org.call("ReadAsset", &["asset8"], &[]).await;

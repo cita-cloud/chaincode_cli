@@ -18,11 +18,11 @@ mod queryresult {
     tonic::include_proto!("queryresult");
 }
 
-mod proposal;
 mod invoker;
+mod proposal;
 mod sender;
 
+pub use invoker::Invoker;
 pub use proposal::ChaincodeProposal;
 pub use proposal::ChaincodeProposalBuilder;
-pub use invoker::Invoker;
 pub use sender::Sender;
