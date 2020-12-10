@@ -18,6 +18,9 @@ cargo run --example asset-transfer-secured-agreement
 ```rust
 use chaincode_invoker::Invoker;
 
+// chaincode name
+let cc_name = "asset-transfer-secured-agreements";
+
 let kms_addr = "localhost:50005";
 let controller_addr = "localhost:50004";
 
@@ -27,6 +30,7 @@ let org1_mspid = "Org1MSP";
 let org1_cert = /* cert file ommitted */;
 
 let org1 = Invoker::new(
+    cc_name,
     kms_addr,
     controller_addr,
     channel_id,

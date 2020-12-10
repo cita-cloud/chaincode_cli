@@ -1,3 +1,5 @@
+use bytes::BufMut;
+use bytes::BytesMut;
 use cita_cloud_proto::blockchain::{Transaction, UnverifiedTransaction, Witness};
 use cita_cloud_proto::common::Empty;
 use cita_cloud_proto::controller::{
@@ -12,6 +14,7 @@ use tonic::transport::channel::Channel;
 use tonic::Request;
 
 pub struct Sender {
+    cc_name: String,
     chain_id: Vec<u8>,
     start_block_number: u64,
     key_id: u64,
@@ -22,7 +25,8 @@ pub struct Sender {
 }
 
 impl Sender {
-    pub async fn new(kms_addr: &str, controller_addr: &str) -> Self {
+    pub async fn new(cc_name: &str, kms_addr: &str, controller_addr: &str) -> Self {
+        let cc_name = cc_name.to_string();
         let mut kms_client = {
             let kms_addr = format!("http://{}", kms_addr);
             KmsServiceClient::connect(kms_addr).await.unwrap()
@@ -69,6 +73,7 @@ impl Sender {
         };
 
         Self {
+            cc_name,
             chain_id,
             start_block_number,
             key_id,
@@ -78,8 +83,17 @@ impl Sender {
         }
     }
 
-    pub async fn send(&mut self, proposal: Vec<u8>) {
-        let tx = build_tx(proposal, self.start_block_number, self.chain_id.clone());
+    pub async fn send(&mut self, proposal: &[u8]) {
+        let mut data = BytesMut::new();
+        data.put_u64(self.cc_name.len() as u64);
+        data.put_slice(self.cc_name.as_bytes());
+        data.put_slice(proposal);
+
+        let tx = build_tx(
+            data.to_vec(),
+            self.start_block_number,
+            self.chain_id.clone(),
+        );
 
         // calc tx hash
         let tx_hash = {

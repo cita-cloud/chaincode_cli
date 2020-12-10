@@ -10,6 +10,7 @@ tonic = "0.2"
 prost = "0.6"
 prost-types = "0.6"
 cita_cloud_proto = { git = "https://github.com/cita-cloud/cita_cloud_proto" }
+bytes = "0.6"
 
 [build-dependencies]
 tonic-build = { version = "0.3" }
