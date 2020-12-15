@@ -10,4 +10,4 @@ RUN cargo build --release --examples
 FROM debian:buster-slim
 COPY --from=buildstage /build/target/release/asset-transfer-basic /usr/bin/
 COPY --from=buildstage /build/target/release/asset-transfer-secured-agreement /usr/bin/
-CMD ["asset-transfer-basic && asset-transfer-secured-agreement"]
+CMD ["asset-transfer-basic"]
