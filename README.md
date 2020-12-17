@@ -4,7 +4,13 @@ A tool for building and sending `executor_chaincode`'s transactions.
 
 ## Usage
 
-### 1. Examples
+### 1. Init submodule
+```shell
+git submodule init
+git submodule update
+```
+
+### 2. Run Examples
 
 ```rust
 cargo run --example asset-transfer-basic
@@ -13,7 +19,7 @@ cargo run --example asset-transfer-basic
 cargo run --example asset-transfer-secured-agreement
 ```
 
-### 2. Use as a library
+### 3. Use as a library
 
 ```rust
 use chaincode_invoker::Invoker;
