@@ -5,12 +5,28 @@ A tool for building and sending `executor_chaincode`'s transactions.
 ## Usage
 
 ### 1. Init submodule
-```shell
-git submodule init
-git submodule update
-```
+  ```shell
+  git submodule init
+  git submodule update
+  ```
+### 2. Install dependences
+* protoc
 
-### 2. Run Examples
+  ```shell
+  brew install protobuf
+  ```
+
+  ```shell
+  apt install protobuf-compiler
+  ```
+
+* rustfmt
+
+  ```
+  rustup component add rustfmt
+  ```
+
+### 3. Run Examples
 
 ```rust
 cargo run --example asset-transfer-basic
@@ -19,7 +35,7 @@ cargo run --example asset-transfer-basic
 cargo run --example asset-transfer-secured-agreement
 ```
 
-### 3. Use as a library
+### 4. Use as a library
 
 ```rust
 use chaincode_invoker::Invoker;
