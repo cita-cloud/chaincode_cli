@@ -41,7 +41,7 @@ cargo run --example asset-transfer-secured-agreement
 use chaincode_invoker::Invoker;
 
 // chaincode name
-let cc_name = "asset-transfer-secured-agreements";
+let cc_name = "asset-transfer-secured-agreement";
 
 let kms_addr = "localhost:50005";
 let controller_addr = "localhost:50004";
